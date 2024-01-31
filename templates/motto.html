@@ -47,6 +47,7 @@
             padding: 10px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            transition: max-width 0.5s ease;
         }
 
         .webtoon-thumbnail {
@@ -55,6 +56,15 @@
             margin-bottom: 10px;
         }
 
+        #scrollToTopButton {
+            bottom: 5px;
+            left: 5px;
+        }
+
+        #scrollToBottomButton {
+            top: 5px;
+            left: 5px;
+        }
 
         .footer {
             position: fixed;
@@ -140,10 +150,11 @@
 
     <div id="webtoon-box">
         <button id="expandButton" onclick="toggleWebtoonBox()">Expand Box</button>
+        <button id="scrollToBottomButton" onclick="scrollToBottom()">Scroll to Bottom</button>
         {% for webtoon_data in data['webtoon_data'] %}
         <img class="webtoon-thumbnail" src="{{ webtoon_data.thumbnailUrl }}" alt="{{ webtoon_data.titleName }}">
         {% endfor %}
-        
+        <button id="scrollToTopButton" onclick="scrollToTop()">Scroll to Top</button>
     </div>
 
     <script>
@@ -215,9 +226,15 @@
             webtoonBox.style.maxWidth = newMaxWidth;
         }
 
+        function scrollToTop() {
+            var webtoonBox = document.getElementById("webtoon-box");
+            webtoonBox.scrollTop = 0;
+        }
 
-
-
+        function scrollToBottom() {
+            var webtoonBox = document.getElementById("webtoon-box");
+            webtoonBox.scrollTop = webtoonBox.scrollHeight;
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"

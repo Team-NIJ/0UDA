@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import os
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 import requests
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -79,7 +80,7 @@ def home():
 
     # Retrieve the top 10 webtoons based on star score
     webtoon_data = db.session.query(Webtoon).order_by(
-        Webtoon.starScore.desc()).limit(10).all()
+        func.random()).limit(10).all()
 
     # Format webtoon data for rendering in the template
     webtoon_data = [
