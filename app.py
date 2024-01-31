@@ -79,13 +79,33 @@ def home():
 
 @app.route('/webtoon')
 def webtoon():
+    # Check if the Webtoon table is empty
+    if not db.session.query(Webtoon).first():
+        update_webtoon_data()  # If empty, update the data
 
-    r = requests.get(
-        'https://comic.naver.com/api/webtoon/titlelist/weekday?week=dailyPlus&order=user%27')
-    rjson = r.json()
+    webtoon_data = db.session.query(Webtoon).order_by(Webtoon.starScore.desc()).all()
 
-    webtoon_data = rjson['titleList']
-
+    # Load data from the database
+    webtoon_data = [
+        {
+            "titleId": webtoon.titleId,
+            "titleName": webtoon.titleName,
+            "author": webtoon.author,
+            "thumbnailUrl": webtoon.thumbnail_url,
+            "up": webtoon.up,
+            "rest": webtoon.rest,
+            "bm": webtoon.bm,
+            "adult": webtoon.adult,
+            "starScore": webtoon.starScore,
+            "viewCount": webtoon.viewCount,
+            "openToday": webtoon.openToday,
+            "potenUp": webtoon.potenUp,
+            "bestChallengeLevelUp": webtoon.bestChallengeLevelUp,
+            "finish": webtoon.finish,
+            "new": webtoon.new
+        }
+        for webtoon in webtoon_data
+    ]
     return render_template('webtoon.html', data=webtoon_data)
 
 @app.route('/webtoon/reload')
