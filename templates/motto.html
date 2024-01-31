@@ -17,12 +17,6 @@
             color: white;
         }
 
-        /* .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        } */
-
         .weather {
             display: flex;
             align-items: center;
@@ -40,6 +34,27 @@
             height: 100vh;
             text-align: center;
         }
+
+        #webtoon-box {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translate(0, -50%);
+            max-width: 10%;
+            max-height: 60vh;
+            overflow-y: auto;
+            background: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .webtoon-thumbnail {
+            max-width: 95%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
 
         .footer {
             position: fixed;
@@ -75,15 +90,6 @@
 
 <body>
 
-    <!-- <nav class="navbar">
-        <img class="logo"
-            src="https://s3.ap-northeast-2.amazonaws.com/materials.spartacodingclub.kr/webjong/images/sparta-logo.svg"
-            alt="" />
-        <div class="weather">
-            <img id="weather-icon">
-            <p id="weather-msg"></p>
-        </div>
-    </nav> -->
     <nav class="navbar border-bottom border-bottom-dark d-flex justify-content-space-between" data-bs-theme="dark">
         <div class="ms-3">
             <img src="https://s3.ap-northeast-2.amazonaws.com/materials.spartacodingclub.kr/webjong/images/sparta-logo.svg"
@@ -130,6 +136,13 @@
     <div class="footer">
         <p id="quoteAuthor"></p>
         <p id="quoteContent"></p>
+    </div>
+
+    <div id="webtoon-box">
+        <h3>웹툰 목록</h3>
+        {% for webtoon_data in data['webtoon_data'] %}
+        <img class="webtoon-thumbnail" src="{{ webtoon_data.thumbnailUrl }}" alt="{{ webtoon_data.titleName }}">
+        {% endfor %}
     </div>
 
     <script>

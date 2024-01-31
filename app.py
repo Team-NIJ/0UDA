@@ -73,10 +73,43 @@ def home():
     name = '최지웅'
     motto = "행복해서 웃는게 아니라 웃어서 행복합니다."
 
+    # Check if the Webtoon table is empty and update data if necessary
+    if not db.session.query(Webtoon).first():
+        update_webtoon_data()
+
+    # Retrieve the top 10 webtoons based on star score
+    webtoon_data = db.session.query(Webtoon).order_by(
+        Webtoon.starScore.desc()).limit(10).all()
+
+    # Format webtoon data for rendering in the template
+    webtoon_data = [
+        {
+            "titleId": webtoon.titleId,
+            "titleName": webtoon.titleName,
+            "author": webtoon.author,
+            "thumbnailUrl": webtoon.thumbnail_url,
+            "up": webtoon.up,
+            "rest": webtoon.rest,
+            "bm": webtoon.bm,
+            "adult": webtoon.adult,
+            "starScore": webtoon.starScore,
+            "viewCount": webtoon.viewCount,
+            "openToday": webtoon.openToday,
+            "potenUp": webtoon.potenUp,
+            "bestChallengeLevelUp": webtoon.bestChallengeLevelUp,
+            "finish": webtoon.finish,
+            "new": webtoon.new
+        }
+        for webtoon in webtoon_data
+    ]
+
+    # Add webtoon_data to the context dictionary
     context = {
         "name": name,
         "motto": motto,
+        "webtoon_data": webtoon_data
     }
+
     return render_template('motto.html', data=context)
 
 
@@ -87,7 +120,7 @@ def webtoon():
         update_webtoon_data()  # If empty, update the data
 
     webtoon_data = db.session.query(Webtoon).order_by(
-        Webtoon.starScore.desc()).limit(20).all()
+        Webtoon.starScore.desc()).limit(10).all()
 
     # Load data from the database
     webtoon_data = [
