@@ -10,6 +10,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
 
 db = SQLAlchemy(app)
 
+
 class Webtoon(db.Model):
     titleId = db.Column(db.Integer, primary_key=True, nullable=False)
     titleName = db.Column(db.String, nullable=True)
@@ -29,6 +30,7 @@ class Webtoon(db.Model):
 
     def __repr__(self):
         return f"<Webtoon {self.titleName}>"
+
 
 with app.app_context():
     db.create_all()
@@ -65,6 +67,7 @@ def update_webtoon_data():
 
     db.session.commit()
 
+
 @app.route("/")
 def home():
     name = '최지웅'
@@ -83,7 +86,8 @@ def webtoon():
     if not db.session.query(Webtoon).first():
         update_webtoon_data()  # If empty, update the data
 
-    webtoon_data = db.session.query(Webtoon).order_by(Webtoon.starScore.desc()).all()
+    webtoon_data = db.session.query(Webtoon).order_by(
+        Webtoon.starScore.desc()).limit(20).all()
 
     # Load data from the database
     webtoon_data = [
@@ -107,6 +111,7 @@ def webtoon():
         for webtoon in webtoon_data
     ]
     return render_template('webtoon.html', data=webtoon_data)
+
 
 @app.route('/webtoon/reload')
 def webtoon_reload():
