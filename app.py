@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 import os
 from flask_sqlalchemy import SQLAlchemy
 import requests
@@ -86,9 +86,12 @@ def webtoon():
 
     webtoon_data = rjson['titleList']
 
-    update_webtoon_data()
-
     return render_template('webtoon.html', data=webtoon_data)
+
+@app.route('/webtoon/reload')
+def webtoon_reload():
+    update_webtoon_data()
+    return redirect(url_for('webtoon'))
 
 
 if __name__ == '__main__':
