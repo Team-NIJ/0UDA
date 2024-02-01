@@ -12,6 +12,32 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
 db = SQLAlchemy(app)
 
 
+class Users(db.Model):
+    userID = db.Column(db.Integer, primary_key=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    nickname = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False, unique=True) #이메일 중복 방지
+    profile_img = db.Column(db.String(1000), nullable=False)
+
+    def __repr__(self):
+        return f"<Users {self.userID}>"
+
+
+class Posts(db.Model):
+    postID = db.Column(db.Integer, primary_key=True, nullable=False)
+    userID = db.Column(db.Integer, db.ForeignKey('users.userID'), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    url = db.Column(db.String(100), nullable=True)
+    type = db.Column(db.String(100), nullable=False)
+    image_url = db.Column(db.String(100), nullable=True)
+    date = db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self):
+        return f"<Posts {self.postID}>"
+
+
 class Webtoon(db.Model):
     titleId = db.Column(db.Integer, primary_key=True, nullable=False)
     titleName = db.Column(db.String, nullable=True)
@@ -67,6 +93,7 @@ def update_webtoon_data():
         db.session.add(webtoon)
 
     db.session.commit()
+
 
 @app.route("/")
 def home():
