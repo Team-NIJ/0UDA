@@ -180,6 +180,7 @@ def webtoon_reload():
     update_webtoon_data()
     return redirect(url_for('webtoon'))
 
+
 @app.route("/total/")
 def total():
     post_list = Posts.query.all()
@@ -209,6 +210,7 @@ def instagram():
     instagram_list = Posts.query.filter_by(type="instagram").all()
     return render_template('instagram.html', data=instagram_list)
 
+
 @app.route("/total/create/")
 def total_create():
     # form에서 보낸 데이터 받아오기
@@ -221,7 +223,7 @@ def total_create():
 
     # 데이터를 db에 저장하기
     post = Posts(userID=userID_receive, title=title_receive, image_url=image_receive,
-                content=content_receive, url=url_receive, type=type_receive)
+                 content=content_receive, url=url_receive, type=type_receive)
     db.session.add(post)
     db.session.commit()
     return redirect(url_for('render_total_filter', userID=userID_receive))
