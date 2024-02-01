@@ -43,13 +43,17 @@
                                 <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="{{ url_for('webtoon') }}">Webtoon</a>
+                                <a class="nav-link active" aria-current="page" href="{{ url_for('total') }}">Boards</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">Album</a>
+                                <a class="nav-link active" aria-current="page"
+                                    href="{{ url_for('webtoon') }}">Webtoon</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white">Movie</a>
+                                <a class="nav-link active" aria-current="page" href="#">Sign in</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#">Log in</a>
                             </li>
                         </ul>
                     </div>
@@ -58,7 +62,7 @@
         </nav>
 
         <div class="px-4 py-5 my-5 text-center">
-            <h1 class="display-5 fw-bold text-body-emphasis">멜로디 쉐어</h1>
+            <h1 class="display-5 fw-bold text-body-emphasis">웹툰 쉐어</h1>
             <div class="col-lg-6 mx-auto">
                 <p class="lead mb-4">
                     <br>
@@ -80,11 +84,12 @@
             {% for webtoon in data %}
             <div class="col">
                 <div class="card h-100">
-                    <img src="{{webtoon.thumbnailUrl}}" class="card-img-top" alt="...">
+                    <a href="{{ url_for('webtoon_specific', titleId=webtoon.titleId) }}">
+                        <img src="{{webtoon.thumbnailUrl}}" class="card-img-top" alt="...">
+                    </a>
                     <div class="card-body">
                         <h5 class="card-title">{{webtoon.titleName}}</h5>
                         <p class="card-text">{{webtoon.author}}</p>
-                        <p class="card-text">{{webtoon.up}}</p>
                     </div>
                 </div>
             </div>
