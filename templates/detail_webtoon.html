@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Webtoon info</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <style>
+    @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css");
+
+    .background-banner {
+      background-image: linear-gradient(45deg,
+          rgb(51 43 43 / 75%),
+          rgb(20 19 20 / 61%)), url("https://s3.ap-northeast-2.amazonaws.com/materials.spartacodingclub.kr/webjong/images/music_festival.jpg");
+      max-height: 100%;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+
+<body data-bs-theme="dark">
+  <div class="background-banner">
+    <nav class="navbar border-bottom border-bottom-dark d-flex justify-content-space-between" data-bs-theme="dark">
+      <div class="ms-3">
+        <img src="https://s3.ap-northeast-2.amazonaws.com/materials.spartacodingclub.kr/webjong/images/sparta-logo.svg"
+          alt="">
+      </div>
+      <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ url_for('total') }}">Boards</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ url_for('webtoon') }}">Webtoon</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Sign in</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Log in</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </nav>
+
+    <!-- #좌측 상단에 카드형태로 webtoon.thumbnailUrl을 생성 -->
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <img src="{{ data.thumbnail_url }}" class="card-img-top" alt="{{ data.titleName }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ data.titleName }}</h5>
+              <p class="card-text">{{ author }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 오른쪽에 Webtoon 클래스의 값들을 나열 -->
+        <div class="col-md-6">
+          <ul class="list-group list-group-flush">
+            <!-- <li class="list-group-item"><strong>제목 ID:</strong> {{ data.titleId }}</li> -->
+            <li class="list-group-item"><strong>오늘 연재:</strong> {{ data.up }}</li>
+            <li class="list-group-item"><strong>휴재:</strong> {{ data.rest }}</li>
+            <!-- <li class="list-group-item"><strong>BM:</strong> {{ data.bm }}</li> -->
+            <li class="list-group-item"><strong>성인:</strong> {{ data.adult }}</li>
+            <li class="list-group-item"><strong>별점:</strong> {{ data.starScore }}</li>
+            <!-- <li class="list-group-item"><strong>조회수:</strong> {{ data.viewCount }}</li> -->
+            <li class="list-group-item"><strong>화제의 웹툰:</strong> {{ data.potenUp }}</li>
+            <li class="list-group-item"><strong>완결:</strong> {{ data.finish }}</li>
+            <li class="list-group-item"><strong>신작:</strong> {{ data.new }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <footer>
+        <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+          <p>© 2023 Company, Inc. All rights reserved.</p>
+          <ul class="list-unstyled d-flex">
+            <li class="ms-3"><a class="link-body-emphasis" href="https://www.youtube.com/@SpartaCodingClub"><i
+                  class="bi bi-youtube"></i></a></li>
+            <li class="ms-3"><a class="link-body-emphasis" href="https://www.instagram.com/spartacodingclub/"><i
+                  class="bi bi-instagram"></i></a>
+            </li>
+            <li class="ms-3"><a class="link-body-emphasis" href="https://spartacodingclub.kr/blog"><i
+                  class="bi bi-postcard"></i></a></li>
+          </ul>
+        </div>
+      </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"></script>
+</body>
+
+</html>
