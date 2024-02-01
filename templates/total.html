@@ -66,6 +66,7 @@
 
 </head>
 
+    /* navbar 부분 */
 <body data-bs-theme="white">
     <div class="background-banner">
         <nav class="navbar border-bottom border-bottom-dark d-flex justify-content-space-between" data-bs-theme="white">
@@ -99,6 +100,7 @@
             </nav>
         </nav>
 
+        /* all instagram music movie 로 이동할 수 있도록 만든 부분 */
         <!-- up card start -->
         <div class="row row-cols-1 row-cols-md-4 g-4">
             <div class="col">
@@ -152,6 +154,7 @@
         </div>
         <!-- up card end -->
 
+        /* 모달 들어가기 위해 누르는 버튼 */
         <!-- Button trigger modal start-->
         <div class="d-grid gap-2 d-sm-flex justify-content-end">
             <button type="button" class="btn custom-button me-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -165,7 +168,7 @@
         </p>
 
 
-
+/* 모달 시작 */
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -223,8 +226,10 @@
                 </div>
             </div>
         </div>
+/* 모달 끝 */
 
-
+        
+/* 주된 카드들 출력하는 곳 */
         <!-- card main case 2-->
         {% for song in data %}
         <div class="card mb-3" style="cursor: pointer;" onclick="location.href='{{song.url}}'">
@@ -261,12 +266,13 @@
             </div>
         </div>
         {% endfor %}
-
+/* 카드 출력 끝 */
 
 
     </div>
     </div>
 
+    /* footer */
     <div class="container">
         <footer>
             <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
