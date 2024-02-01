@@ -15,6 +15,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
 
 db = SQLAlchemy(app)
 
+class ViewCount(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    board_post_id = db.Column(db.Integer, db.ForeignKey('posts.postID'), nullable=False, unique=True)
+    count = db.Column(db.Integer, default=0)
+
+    board = db.relationship('Posts', backref=db.backref('view_count_relation', uselist=False))
+    
+    def __repr__(self):
+        return f'노래 ID {self.board_post_id}의 조회수: {self.count}'
 
 class Users(db.Model):
     userID = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -359,6 +368,23 @@ def protected(current_user):
 def check_token():
     print(session['user_id'])
     return render_template('check_token.html')
+
+# 노래 조회수 증가 함수
+@app.route("/increase_view_count", methods=['POST','GET'])
+def increase_view_count():
+    board_post_id = request.form.get('board_post_id')
+    board=Posts.query.get(board_post_id)
+    if board:
+        view_count = ViewCount.query.filter_by(board_post_id=board_post_id).first()
+        if view_count:
+            view_count.count += 1
+        else:
+            view_count = ViewCount(board_post_id=board_post_id, count=1)
+            db.session.add(view_count)
+        db.session.commit()
+        return jsonify({"message": "View count increased successfully"})
+    else:
+        return jsonify({"error": "Song not found"}), 404
 
 
 if __name__ == '__main__':
