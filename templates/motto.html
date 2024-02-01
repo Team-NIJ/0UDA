@@ -17,12 +17,6 @@
             color: white;
         }
 
-        .weather {
-            display: flex;
-            align-items: center;
-            margin-right: 30px;
-        }
-
         .container {
             display: flex;
             flex-direction: column;
@@ -63,7 +57,7 @@
             left: 0;
             transform: translateY(-50%);
             width: 5%;
-            height: 20%;
+            height: 100%;
             cursor: pointer;
             z-index: 2;
             opacity: 0.1;
@@ -178,19 +172,7 @@
             $('#quoteContent').text(contentMsg)
 
         })
-        let weather_url = "http://spartacodingclub.shop/sparta_api/weather/seoul";
-        fetch(weather_url)
-            .then(res => res.json())
-            .then(data => {
-                // console.log(data);
-                let temp = data['temp']
-                let icon_url = data['icon']
 
-                let message = `${temp}ºC`
-                $('#weather-msg').text(message)
-                $('#weather-icon').attr('src', icon_url)
-
-            })
         function toggleWebtoonBox() {
             var webtoonBox = document.getElementById("webtoon-box");
 
