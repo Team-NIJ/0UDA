@@ -178,9 +178,9 @@
 
             // 현재 최대 너비를 가져옵니다.
             var currentMaxWidth = window.getComputedStyle(webtoonBox).maxWidth;
-
+            console.log(currentMaxWidth);
             // 클릭 시 현재 최대 너비의 2배 또는 절반으로 확장 또는 축소합니다.
-            var newMaxWidth = (currentMaxWidth <= "10%") ? "20%" : "10%";
+            var newMaxWidth = (currentMaxWidth === "10%") ? "1%" : "10%";
 
             // 최대 너비를 설정합니다.
             webtoonBox.style.maxWidth = newMaxWidth;
