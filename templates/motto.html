@@ -117,13 +117,16 @@
                             <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Boards</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{{ url_for('webtoon') }}">Webtoon</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Album</a>
+                            <a class="nav-link active" aria-current="page" href="#">Sign in</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Movie</a>
+                            <a class="nav-link active" aria-current="page" href="#">Log in</a>
                         </li>
                     </ul>
                 </div>
@@ -134,12 +137,13 @@
     <div class="container">
         <div class="greeting">
             <h1>Hello, My name!</h1>
-            <h1 id="current-time"></h1>
         </div>
 
         <div class="motto">
-            <h3>My life's motto</h3>
-            <h2>웃으면 행복해집니다.</h2>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
         </div>
     </div>
 
@@ -158,35 +162,6 @@
     </div>
 
     <script>
-        function displayCurrentTime() {
-            var currentTime = new Date();
-            var hours = currentTime.getHours();
-            var minutes = currentTime.getMinutes();
-            var seconds = currentTime.getSeconds();
-
-            // AM 또는 PM 설정
-            var meridiem = hours >= 12 ? "PM" : "AM";
-
-            // 시간이 12를 넘어가면 12로 나눠서 표시
-            hours = hours > 12 ? hours - 12 : hours;
-
-            // 0을 붙여 한 자리 숫자를 두 자리로 만듦
-            hours = addLeadingZero(hours);
-            minutes = addLeadingZero(minutes);
-            seconds = addLeadingZero(seconds);
-
-            // 시간을 HTML 요소에 표시
-            var timeString = hours + ":" + minutes + ":" + seconds + " " + meridiem;
-            document.getElementById("current-time").innerHTML = timeString;
-        }
-
-        function addLeadingZero(number) {
-            return number < 10 ? "0" + number : number;
-        }
-
-        // 1초마다 시간을 업데이트
-        setInterval(displayCurrentTime, 1000);
-
         let url = "https://api.quotable.io/random";
         fetch(url).then(res => res.json()).then(data => {
             console.log(data);

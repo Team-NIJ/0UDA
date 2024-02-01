@@ -68,7 +68,6 @@ def update_webtoon_data():
 
     db.session.commit()
 
-
 @app.route("/")
 def home():
     name = '최지웅'
