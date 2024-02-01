@@ -4,6 +4,8 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 import requests
+from datetime import datetime
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
@@ -221,9 +223,11 @@ def total_create():
     url_receive = request.args.get("url")
     type_receive = request.args.get("type")
 
+    current_time = datetime.now()
+
     # 데이터를 db에 저장하기
     post = Posts(userID=userID_receive, title=title_receive, image_url=image_receive,
-                 content=content_receive, url=url_receive, type=type_receive)
+                 content=content_receive, url=url_receive, type=type_receive, date=current_time)
     db.session.add(post)
     db.session.commit()
     return redirect(url_for('render_total_filter', userID=userID_receive))
