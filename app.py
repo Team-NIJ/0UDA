@@ -107,7 +107,7 @@ def home():
 
     # Retrieve the top 10 webtoons based on star score
     webtoon_data = db.session.query(Webtoon).filter(Webtoon.adult == 'False').order_by(
-    func.random()).limit(10).all()
+        func.random()).limit(10).all()
 
     # Format webtoon data for rendering in the template
     webtoon_data = [
@@ -183,7 +183,7 @@ def webtoon_reload():
 @app.route('/webtoon/<titleId>')
 def webtoon_specific(titleId):
     webtoon_data = Webtoon.query.filter_by(titleId=titleId).first()
-    return render_template('detail_webtoon.html', data = webtoon_data)
+    return render_template('detail_webtoon.html', data=webtoon_data)
 
 
 if __name__ == '__main__':
