@@ -1,9 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
+import os
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
-import os
 import requests
-from datetime import datetime
+from werkzeug.security import check_password_hash, generate_password_hash
+import jwt
+import datetime
+from functools import wraps
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
@@ -222,7 +225,7 @@ def total_create():
     url_receive = request.args.get("url")
     type_receive = request.args.get("type")
 
-    current_time = datetime.now()
+    current_time = datetime.datetime.now()
 
     # 데이터를 db에 저장하기
     post = Posts(userID=userID_receive, title=title_receive, image_url=image_receive,
@@ -244,6 +247,118 @@ def delete_post(id):
 def webtoon_specific(titleId):
     webtoon_data = Webtoon.query.filter_by(titleId=titleId).first()
     return render_template('detail_webtoon.html', data=webtoon_data)
+
+# 계정 회원가입 페이지 (찬)
+
+
+@app.route("/signup")
+def signup():
+    return render_template('signup.html')
+
+# 계정 로그인 페이지 (찬)
+
+
+@app.route("/login")
+def login():
+    return render_template('login.html')
+
+# 계정 회원가입 (찬)
+
+
+@app.route("/signup/create", methods=["POST"])
+def signup_create():
+    loginID_receive = request.form.get("loginID")
+    password_receive = request.form.get("password")
+    name_receive = request.form.get("name")
+    nickname_receive = request.form.get("nickname")
+    email_receive = request.form.get("email")
+    profile_img_receive = request.form.get("profile_img")
+    isNotNone = Users.query.filter_by(loginID=loginID_receive).first()
+
+    # 중복ID가 있는 경우
+    if isNotNone is not None:
+        duplicate_message = True
+        return render_template('signup.html', duplicate_message=duplicate_message)
+    # 중복ID가 없는 경우
+    else:
+        hashed_password = generate_password_hash(
+            password_receive, method='pbkdf2:sha256')
+        newUsers = Users(loginID=loginID_receive,
+                            password=hashed_password,
+                            name=name_receive,
+                            nickname=nickname_receive,
+                            email=email_receive,
+                            profile_img=profile_img_receive)
+        db.session.add(newUsers)
+        db.session.commit()
+
+    return redirect(url_for('signup'))
+
+
+# 토큰화 (찬)
+app.config['SECRET_KEY'] = 'your_secret_key'
+
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        # 세션에서 토큰 가져오기
+        token = session.get('token')
+
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
+
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'])
+            current_user = Users.query.filter_by(userID=data['userID']).first()
+        except:
+            return jsonify({'message': 'Token is invalid!'}), 401
+
+        return f(current_user, *args, **kwargs)
+
+    return decorated
+
+# 계정 로그인 (찬)
+
+
+@app.route("/login/login", methods=["POST"])
+def login_login():
+    loginID_receive = request.form.get("loginID")
+    password_receive = request.form.get("password")
+    user = Users.query.filter_by(loginID=loginID_receive).first()
+
+    if user and check_password_hash(user.password, password_receive):
+        session['user_id'] = user.userID
+        session['token'] = jwt.encode({'userID': user.userID, 'exp': datetime.datetime.utcnow(
+        ) + datetime.timedelta(hours=1)}, app.config['SECRET_KEY'])
+        yesExist_message = True
+        return render_template('login.html', yesExist_message=yesExist_message, token=session['token'])
+    else:
+        notExist_message = True
+        return render_template('login.html', notExist_message=notExist_message)
+
+# 토큰관련 (찬)
+
+
+@app.route("/protected", methods=["GET"])
+@token_required
+def protected(current_user):
+    # 세션에서 사용자 ID 가져오기
+    user_id_from_session = session.get('user_id')
+
+    # 세션의 사용자 ID와 토큰의 사용자 ID 비교
+    if user_id_from_session == current_user.userID:
+        return jsonify({'message': f'안녕하세요 {current_user.name}, 보호된 경로입니다!'})
+    else:
+        return jsonify({'message': '유효하지 않은 세션입니다. 다시 로그인해주세요.'}), 401
+
+# 토큰확인용 temp.html로 이동하는 라우팅
+
+
+@app.route('/check_token')
+def check_token():
+    print(session['user_id'])
+    return render_template('check_token.html')
 
 
 if __name__ == '__main__':
