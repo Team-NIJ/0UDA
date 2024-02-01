@@ -106,8 +106,8 @@ def home():
         update_webtoon_data()
 
     # Retrieve the top 10 webtoons based on star score
-    webtoon_data = db.session.query(Webtoon).order_by(
-        func.random()).limit(10).all()
+    webtoon_data = db.session.query(Webtoon).filter(Webtoon.adult == 'False').order_by(
+    func.random()).limit(10).all()
 
     # Format webtoon data for rendering in the template
     webtoon_data = [
