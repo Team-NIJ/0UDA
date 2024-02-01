@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 import os
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 import requests
 
@@ -29,6 +30,18 @@ class Webtoon(db.Model):
 
     def __repr__(self):
         return f"<Webtoon {self.titleName}>"
+
+class Song(db.Model):
+    postID = db.Column(db.Integer, primary_key=True)
+    userID = db.Column(db.String(100), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
+    image_url = db.Column(db.String(10000), nullable=False)
+    content = db.Column(db.String(100000), nullable=False)
+    url = db.Column(db.String(10000), nullable=False)
+    date = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
+    type = db.Column(db.String(100))
+    def __repr__(self):
+        return f'{self.userID} {self.title} 추천 by {self.userID} {self.content}'
 
 with app.app_context():
     db.create_all()
@@ -112,6 +125,60 @@ def webtoon():
 def webtoon_reload():
     update_webtoon_data()
     return redirect(url_for('webtoon'))
+
+@app.route("/total/")
+def total():
+    song_list = Song.query.all()
+    return render_template('total.html', data=song_list)
+
+
+@app.route("/total/<userID>")
+def render_total_filter(userID):
+    filter_list = Song.query.filter_by(userID=userID).all()
+    return render_template('total.html', data=filter_list)
+
+
+@app.route("/music/")
+def music():
+    music_list = Song.query.filter_by(type="music").all()
+    return render_template('music.html', data=music_list)
+
+
+@app.route("/movie/")
+def movie():
+    movie_list = Song.query.filter_by(type="movie").all()
+    return render_template('movie.html', data=movie_list)
+
+
+@app.route("/instagram/")
+def instagram():
+    instagram_list = Song.query.filter_by(type="instagram").all()
+    return render_template('instagram.html', data=instagram_list)
+
+@app.route("/total/create/")
+def total_create():
+    # form에서 보낸 데이터 받아오기
+    userID_receive = request.args.get("userID")
+    title_receive = request.args.get("title")
+    image_receive = request.args.get("image_url")
+    content_receive = request.args.get("content")
+    url_receive = request.args.get("url")
+    type_receive = request.args.get("type")
+
+    # 데이터를 db에 저장하기
+    song = Song(userID=userID_receive, title=title_receive, image_url=image_receive,
+                content=content_receive, url=url_receive, type=type_receive)
+    db.session.add(song)
+    db.session.commit()
+    return redirect(url_for('render_total_filter', userID=userID_receive))
+
+
+@app.route("/delete_song/<int:id>")
+def delete_song(id):
+    song_to_delete = Song.query.get_or_404(id)
+    db.session.delete(song_to_delete)
+    db.session.commit()
+    return redirect(url_for('total'))
 
 
 if __name__ == '__main__':
