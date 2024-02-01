@@ -61,6 +61,18 @@
             left: 5px;
         }
 
+        #expandButton {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 5%;
+            height: 20%;
+            cursor: pointer;
+            z-index: 2;
+            opacity: 0.1;
+        }
+
         #scrollToBottomButton {
             top: 5px;
             left: 5px;
@@ -152,11 +164,13 @@
         <p id="quoteContent"></p>
     </div>
 
-    <div id="webtoon-box">
-        <button id="expandButton" onclick="toggleWebtoonBox()">Expand Box</button>
+    <div id="webtoon-box" onscroll="updateButtonPosition()">
+        <button id="expandButton" onclick="toggleWebtoonBox()"></button>
         <button id="scrollToBottomButton" onclick="scrollToBottom()">Scroll to Bottom</button>
         {% for webtoon_data in data['webtoon_data'] %}
-        <img class="webtoon-thumbnail" src="{{ webtoon_data.thumbnailUrl }}" alt="{{ webtoon_data.titleName }}">
+        <a href="{{ url_for('webtoon_specific', titleId=webtoon_data.titleId) }}">
+            <img class="webtoon-thumbnail" src="{{ webtoon_data.thumbnailUrl }}" alt="{{ webtoon_data.titleName }}">
+        </a>
         {% endfor %}
         <button id="scrollToTopButton" onclick="scrollToTop()">Scroll to Top</button>
     </div>
@@ -209,6 +223,16 @@
         function scrollToBottom() {
             var webtoonBox = document.getElementById("webtoon-box");
             webtoonBox.scrollTop = webtoonBox.scrollHeight;
+        }
+        function updateButtonPosition() {
+            var webtoonBox = document.getElementById("webtoon-box");
+            var expandButton = document.getElementById("expandButton");
+
+            var scrollPosition = webtoonBox.scrollTop;
+            var boxHeight = webtoonBox.clientHeight;
+
+            // 버튼이 상자의 왼쪽 가운데에 위치하도록 설정
+            expandButton.style.top = (scrollPosition + boxHeight / 2) + "px";
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"

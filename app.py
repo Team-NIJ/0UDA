@@ -17,7 +17,7 @@ class Users(db.Model):
     password = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     nickname = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False, unique=True) #이메일 중복 방지
+    email = db.Column(db.String(100), nullable=False, unique=True)  # 이메일 중복 방지
     profile_img = db.Column(db.String(1000), nullable=False)
 
     def __repr__(self):
@@ -26,7 +26,8 @@ class Users(db.Model):
 
 class Posts(db.Model):
     postID = db.Column(db.Integer, primary_key=True, nullable=False)
-    userID = db.Column(db.Integer, db.ForeignKey('users.userID'), nullable=False)
+    userID = db.Column(db.Integer, db.ForeignKey(
+        'users.userID'), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
     url = db.Column(db.String(100), nullable=True)
@@ -147,7 +148,7 @@ def webtoon():
         update_webtoon_data()  # If empty, update the data
 
     webtoon_data = db.session.query(Webtoon).order_by(
-        Webtoon.starScore.desc()).limit(10).all()
+        func.random()).limit(40).all()
 
     # Load data from the database
     webtoon_data = [
@@ -177,6 +178,12 @@ def webtoon():
 def webtoon_reload():
     update_webtoon_data()
     return redirect(url_for('webtoon'))
+
+
+@app.route('/webtoon/<titleId>')
+def webtoon_specific(titleId):
+    webtoon_data = Webtoon.query.filter_by(titleId=titleId).first()
+    return render_template('detail_webtoon.html', data = webtoon_data)
 
 
 if __name__ == '__main__':
