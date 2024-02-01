@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 import os
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 import requests
@@ -178,6 +179,60 @@ def webtoon():
 def webtoon_reload():
     update_webtoon_data()
     return redirect(url_for('webtoon'))
+
+@app.route("/total/")
+def total():
+    post_list = Posts.query.all()
+    return render_template('total.html', data=post_list)
+
+
+@app.route("/total/<userID>")
+def render_total_filter(userID):
+    filter_list = Posts.query.filter_by(userID=userID).all()
+    return render_template('total.html', data=filter_list)
+
+
+@app.route("/music/")
+def music():
+    music_list = Posts.query.filter_by(type="music").all()
+    return render_template('music.html', data=music_list)
+
+
+@app.route("/movie/")
+def movie():
+    movie_list = Posts.query.filter_by(type="movie").all()
+    return render_template('movie.html', data=movie_list)
+
+
+@app.route("/instagram/")
+def instagram():
+    instagram_list = Posts.query.filter_by(type="instagram").all()
+    return render_template('instagram.html', data=instagram_list)
+
+@app.route("/total/create/")
+def total_create():
+    # form에서 보낸 데이터 받아오기
+    userID_receive = request.args.get("userID")
+    title_receive = request.args.get("title")
+    image_receive = request.args.get("image_url")
+    content_receive = request.args.get("content")
+    url_receive = request.args.get("url")
+    type_receive = request.args.get("type")
+
+    # 데이터를 db에 저장하기
+    post = Posts(userID=userID_receive, title=title_receive, image_url=image_receive,
+                content=content_receive, url=url_receive, type=type_receive)
+    db.session.add(post)
+    db.session.commit()
+    return redirect(url_for('render_total_filter', userID=userID_receive))
+
+
+@app.route("/delete_song/<int:id>")
+def delete_post(id):
+    post_to_delete = Posts.query.get_or_404(id)
+    db.session.delete(post_to_delete)
+    db.session.commit()
+    return redirect(url_for('total'))
 
 
 @app.route('/webtoon/<titleId>')
