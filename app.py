@@ -1,11 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for
-import os
-from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
+import os
 import requests
 from datetime import datetime
-
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
@@ -17,6 +15,7 @@ db = SQLAlchemy(app)
 
 class Users(db.Model):
     userID = db.Column(db.Integer, primary_key=True, nullable=False)
+    loginID = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     nickname = db.Column(db.String(100), nullable=False)
