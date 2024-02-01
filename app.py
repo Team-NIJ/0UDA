@@ -227,7 +227,7 @@ def total_create():
     return redirect(url_for('render_total_filter', userID=userID_receive))
 
 
-@app.route("/delete_song/<int:id>")
+@app.route("/delete_post/<int:id>")
 def delete_post(id):
     post_to_delete = Posts.query.get_or_404(id)
     db.session.delete(post_to_delete)
