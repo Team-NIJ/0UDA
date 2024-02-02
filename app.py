@@ -194,22 +194,33 @@ def webtoon_reload():
     return redirect(url_for('webtoon'))
 
 
-# @app.route("/total/")
+def get_current_user_id():
+    user_id = session.get('user_id')
+    if user_id:
+        user = Users.query.get(user_id)
+        return user.loginID if user else None
+    return None
+
+# @app.route("/total/", methods=['GET', 'POST'])
 # def total():
-#     post_list = Posts.query.all()
-#     return render_template('total.html', data=post_list)
+#     if request.method == 'POST':
+#         # 여기에 POST 요청 처리 로직을 구현합니다.
+#         return redirect(url_for('total'))
+#     else:
+#         post_list = Posts.query.all()
+#         key_id = Users.query.get(session['user_id'])  # 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
+#         current_user_id = key_id.loginID
+#         return render_template('total.html', data=post_list, current_user_id=current_user_id)
+
 @app.route("/total/", methods=['GET', 'POST'])
 def total():
     if request.method == 'POST':
-        # 여기에 POST 요청 처리 로직을 구현합니다.
+        # POST 요청 처리 로직
         return redirect(url_for('total'))
     else:
         post_list = Posts.query.all()
-        key_id = Users.query.get(session['user_id'])  # 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
-        current_user_id = key_id.loginID
+        current_user_id = get_current_user_id()
         return render_template('total.html', data=post_list, current_user_id=current_user_id)
-        # return render_template('total.html', data=post_list)
-
 
 @app.route("/total/<userID>")
 def render_total_filter(userID):
@@ -220,19 +231,22 @@ def render_total_filter(userID):
 @app.route("/music/")
 def music():
     music_list = Posts.query.filter_by(type="music").all()
-    return render_template('music.html', data=music_list)
+    current_user_id = get_current_user_id()
+    return render_template('music.html', data=music_list, current_user_id=current_user_id)
 
 
 @app.route("/movie/")
 def movie():
     movie_list = Posts.query.filter_by(type="movie").all()
+    current_user_id = get_current_user_id()
     return render_template('movie.html', data=movie_list)
 
 
 @app.route("/instagram/")
 def instagram():
     instagram_list = Posts.query.filter_by(type="instagram").all()
-    return render_template('instagram.html', data=instagram_list)
+    current_user_id = get_current_user_id()
+    return render_template('instagram.html', data=instagram_list, current_user_id=current_user_id)
 
 
 @app.route("/total/create/")

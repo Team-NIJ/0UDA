@@ -254,7 +254,6 @@
         <!-- card main case 2-->
         <p>Current User ID: {{ current_user_id }}</p>
         {% for post in data %}
-            <!-- {% include 'duplicates/card_main.html' %} -->
             {% with current_user_id=current_user_id %}
                 {% include 'duplicates/card_main.html' %}
             {% endwith %}   
