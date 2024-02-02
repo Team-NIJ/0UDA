@@ -267,11 +267,11 @@ def delete_post(postID):
     # db.session.delete(post_to_delete)
     # db.session.commit()
     print("Before deletion")
-    post_to_delete = Posts.query.get(id)
+    post_to_delete = Posts.query.get(postID)
     
     # Cascade delete to associated view_count
     if post_to_delete:
-        view_count_to_delete = ViewCount.query.filter_by(board_post_id=id).first()
+        view_count_to_delete = ViewCount.query.filter_by(board_post_id=postID).first()
         if view_count_to_delete:
             db.session.delete(view_count_to_delete)
 
