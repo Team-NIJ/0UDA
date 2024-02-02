@@ -206,7 +206,7 @@ def total():
     else:
         post_list = Posts.query.all()
         user_id_from_session = session.get('user_id')# 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
-        login_id = Users.query.filter_by(userID=userID).first()
+        # login_id = Users.query.filter_by(userID=userID).first()
         return render_template('total.html', data=post_list, current_user_id=user_id_from_session)
         # return render_template('total.html', data=post_list)
 
