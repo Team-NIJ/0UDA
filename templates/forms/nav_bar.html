@@ -20,12 +20,17 @@
                     <a class="nav-link text-white active" aria-current="page" href="{{ url_for('signup') }}">Sign
                         up</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white active" aria-current="page" href="{{ url_for('login') }}">Log in</a>
-                </li>
+                {% if session.get('user_id') %}
+                <!-- User is logged in, show Log out link -->
                 <li class="nav-item">
                     <a class="nav-link text-white active" aria-current="page" href="{{ url_for('logout') }}">Log out</a>
                 </li>
+                {% else %}
+                <!-- User is not logged in, show Sign up link -->
+                <li class="nav-item">
+                    <a class="nav-link text-white active" aria-current="page" href="{{ url_for('login') }}">Log in</a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>
