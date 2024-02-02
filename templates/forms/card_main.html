@@ -1,8 +1,8 @@
-<div class="card mb-3" id="post-{{ post.postID }}" style="cursor: pointer;">
+<div class="card mb-3 mx-auto" id="post-{{ post.postID }}" style="cursor: pointer;">
     <div class="row g-0">
         <div class="col-md-6">
             <a href="{{ post.url }}" onclick="increaseViewCount('{{ post.url }}','{{post.postID}}');">
-                <img src="{{post.image_url}}" class="img-fluid rounded-start" alt="...">
+                <img src="{{post.image_url}}" class="img-fluid rounded-start" style="object-fit: cover; width: 100%; height: 100%;" alt="...">
             </a>
         </div>
         <div class="col-md-6">
