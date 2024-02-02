@@ -278,7 +278,8 @@ def total_create():
         db.session.add(post)
         db.session.commit()
 
-        return redirect(url_for('render_total_filter', userID=userID_receive))
+        return redirect(url_for('total'))
+        # return redirect(url_for('render_total_filter', userID=userID_receive))
     else:
         # Redirect the user to the login page if not authenticated
         return redirect(url_for('login'))
