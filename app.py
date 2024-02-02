@@ -15,15 +15,19 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
 
 db = SQLAlchemy(app)
 
+
 class ViewCount(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    board_post_id = db.Column(db.Integer, db.ForeignKey('posts.postID'), nullable=False, unique=True)
+    board_post_id = db.Column(db.Integer, db.ForeignKey(
+        'posts.postID'), nullable=False, unique=True)
     count = db.Column(db.Integer, default=0)
 
-    board = db.relationship('Posts', backref=db.backref('view_count_relation', uselist=False))
-    
+    board = db.relationship('Posts', backref=db.backref(
+        'view_count_relation', uselist=False))
+
     def __repr__(self):
         return f'노래 ID {self.board_post_id}의 조회수: {self.count}'
+
 
 class Users(db.Model):
     userID = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -205,7 +209,8 @@ def total():
         return redirect(url_for('total'))
     else:
         post_list = Posts.query.all()
-        user_id_from_session = session.get('user_id')# 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
+        # 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
+        user_id_from_session = session.get('user_id')
         # login_id = Users.query.filter_by(userID=userID).first()
         return render_template('total.html', data=post_list, current_user_id=user_id_from_session)
         # return render_template('total.html', data=post_list)
@@ -224,7 +229,8 @@ def music():
         return redirect(url_for('music'))
     else:
         music_list = Posts.query.filter_by(type="music").all()
-        user_id_from_session = session.get('user_id')# 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
+        # 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
+        user_id_from_session = session.get('user_id')
         return render_template('music.html', data=music_list, current_user_id=user_id_from_session)
     # music_list = Posts.query.filter_by(type="music").all()
     # return render_template('music.html', data=music_list)
@@ -237,7 +243,8 @@ def movie():
         return redirect(url_for('movie'))
     else:
         movie_list = Posts.query.filter_by(type="movie").all()
-        user_id_from_session = session.get('user_id')# 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
+        # 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
+        user_id_from_session = session.get('user_id')
         return render_template('movie.html', data=movie_list, current_user_id=user_id_from_session)
     # movie_list = Posts.query.filter_by(type="movie").all()
     # return render_template('movie.html', data=movie_list)
@@ -250,7 +257,8 @@ def instagram():
         return redirect(url_for('instagram'))
     else:
         instagram_list = Posts.query.filter_by(type="instagram").all()
-        user_id_from_session = session.get('user_id')# 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
+        # 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
+        user_id_from_session = session.get('user_id')
         return render_template('instagram.html', data=instagram_list, current_user_id=user_id_from_session)
     # instagram_list = Posts.query.filter_by(type="instagram").all()
     # return render_template('instagram.html', data=instagram_list)
@@ -290,6 +298,8 @@ def total_create():
 #     db.session.delete(post_to_delete)
 #     db.session.commit()
 #     return redirect(url_for('total'))
+
+
 @app.route("/delete_post/<int:postID>", methods=['POST'])
 def delete_post(postID):
     # post_to_delete = Posts.query.get_or_404(postID)
@@ -297,10 +307,11 @@ def delete_post(postID):
     # db.session.commit()
     print("Before deletion")
     post_to_delete = Posts.query.get(postID)
-    
+
     # Cascade delete to associated view_count
     if post_to_delete:
-        view_count_to_delete = ViewCount.query.filter_by(board_post_id=postID).first()
+        view_count_to_delete = ViewCount.query.filter_by(
+            board_post_id=postID).first()
         if view_count_to_delete:
             db.session.delete(view_count_to_delete)
 
@@ -328,6 +339,7 @@ def get_post_info(postID):
     else:
         return "Post not found", 404
 
+
 @app.route('/edit-post/<int:postID>', methods=['POST'])
 def edit_post(postID):
     post = db.session.get(Posts, postID)
@@ -353,8 +365,8 @@ def edit_post(postID):
         return jsonify({'success': 'Post updated successfully'}), 200
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': str(e)}), 500    
-    
+        return jsonify({'error': str(e)}), 500
+
 
 @app.route('/webtoon/<titleId>')
 def webtoon_specific(titleId):
@@ -386,14 +398,22 @@ def signup_create():
     nickname_receive = request.form.get("nickname")
     email_receive = request.form.get("email")
     profile_img_receive = request.form.get("profile_img")
-    isNotNone = Users.query.filter_by(loginID=loginID_receive).first()
+
+    # 중복 검사
+    isNotNone_loginID = Users.query.filter_by(loginID=loginID_receive).first()
+    isNotNone_email = Users.query.filter_by(email=email_receive).first()
 
     # 중복ID가 있는 경우
-    if isNotNone is not None:
-        duplicate_message = True
-        return render_template('signup.html', duplicate_message=duplicate_message)
-    # 중복ID가 없는 경우
+    if isNotNone_loginID is not None:
+        duplicate_loginID_message = True
+        return render_template('signup.html', duplicate_loginID_message=duplicate_loginID_message)
+    # 중복email이 있는 경우
+    elif isNotNone_email is not None:
+        duplicate_email_message = True
+        return render_template('signup.html', duplicate_email_message=duplicate_email_message)
+    # 중복이 없는 경우
     else:
+        onlyoneid_message = True
         hashed_password = generate_password_hash(
             password_receive, method='pbkdf2:sha256')
         newUsers = Users(loginID=loginID_receive,
@@ -404,8 +424,7 @@ def signup_create():
                         profile_img=profile_img_receive)
         db.session.add(newUsers)
         db.session.commit()
-
-    return redirect(url_for('signup'))
+        return render_template('signup.html', onlyoneid_message=onlyoneid_message)
 
 
 # 토큰화 (찬)
@@ -450,6 +469,7 @@ def login_login():
         notExist_message = True
         return render_template('login.html', notExist_message=notExist_message)
 
+
 @app.route("/logout")
 def logout():
     session.pop('user_id', None)
@@ -480,12 +500,15 @@ def check_token():
     return render_template('check_token.html')
 
 # 노래 조회수 증가 함수
+
+
 @app.route("/increase_view_count", methods=['POST'])
 def increase_view_count():
     board_post_id = request.form.get('board_post_id')
-    board=Posts.query.get(board_post_id)
+    board = Posts.query.get(board_post_id)
     if board:
-        view_count = ViewCount.query.filter_by(board_post_id=board_post_id).first()
+        view_count = ViewCount.query.filter_by(
+            board_post_id=board_post_id).first()
         if view_count:
             view_count.count += 1
         else:

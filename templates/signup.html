@@ -46,11 +46,15 @@
                         <br>
                         공유다에서 소중한 사람과 함께 공유하세요.
                         <br><br>
-                        {% if duplicate_message %}
+                        {% if duplicate_loginID_message %}
                     <div class="alert alert-warning" role="alert">
                         중복된 ID입니다. 다른 ID를 선택해주세요.
                     </div>
-                    {% else %}
+                    {% elif duplicate_email_message %}
+                    <div class="alert alert-warning" role="alert">
+                        중복된 email입니다. 다른 email을 선택해주세요.
+                    </div>
+                    {% elif onlyoneid_message %}
                     <div class="alert alert-warning" role="alert">
                         회원가입이 완료 되었습니다. 좋은 여행 되시길 바랍니다!
                     </div>

@@ -156,17 +156,16 @@
         {% include '/forms/upload_modal.html' %}
 
         <!-- Delete Modal -->
-        {% include 'duplicates/delete_modal.html' %}
+        {% include '/forms/delete_modal.html' %}
 
         <!-- Edit Modal-->
-        {% include 'duplicates/edit_modal.html' %}
+        {% include '/forms/edit_modal.html' %}
 
         <!-- card main case 2-->
         <p>Current User ID: {{ current_user_id }}</p>
         {% for post in data %}
-        <!-- {% include 'duplicates/card_main.html' %} -->
         {% with current_user_id=current_user_id %}
-        {% include 'duplicates/card_main.html' %}
+        {% include '/forms/card_main.html' %}
         {% endwith %}
         {% endfor %}
 
