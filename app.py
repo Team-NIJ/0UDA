@@ -15,15 +15,19 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
 
 db = SQLAlchemy(app)
 
+
 class ViewCount(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    board_post_id = db.Column(db.Integer, db.ForeignKey('posts.postID'), nullable=False, unique=True)
+    board_post_id = db.Column(db.Integer, db.ForeignKey(
+        'posts.postID'), nullable=False, unique=True)
     count = db.Column(db.Integer, default=0)
 
-    board = db.relationship('Posts', backref=db.backref('view_count_relation', uselist=False))
-    
+    board = db.relationship('Posts', backref=db.backref(
+        'view_count_relation', uselist=False))
+
     def __repr__(self):
         return f'노래 ID {self.board_post_id}의 조회수: {self.count}'
+
 
 class Users(db.Model):
     userID = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -226,22 +230,30 @@ def instagram():
 
 @app.route("/total/create/")
 def total_create():
-    # form에서 보낸 데이터 받아오기
-    userID_receive = request.args.get("userID")
-    title_receive = request.args.get("title")
-    image_receive = request.args.get("image_url")
-    content_receive = request.args.get("content")
-    url_receive = request.args.get("url")
-    type_receive = request.args.get("type")
+    # Get user ID from the session
+    user_id_from_session = session.get('user_id')
 
-    current_time = datetime.datetime.now()
+    if user_id_from_session:  # Check if the user is logged in
+        # Access the user ID from the session
+        userID_receive = user_id_from_session
+        title_receive = request.args.get("title")
+        image_receive = request.args.get("image_url")
+        content_receive = request.args.get("content")
+        url_receive = request.args.get("url")
+        type_receive = request.args.get("type")
 
-    # 데이터를 db에 저장하기
-    post = Posts(userID=userID_receive, title=title_receive, image_url=image_receive,
-                 content=content_receive, url=url_receive, type=type_receive, date=current_time)
-    db.session.add(post)
-    db.session.commit()
-    return redirect(url_for('render_total_filter', userID=userID_receive))
+        current_time = datetime.datetime.now()
+
+        # Use the user ID in your database operation
+        post = Posts(userID=userID_receive, title=title_receive, image_url=image_receive,
+                     content=content_receive, url=url_receive, type=type_receive, date=current_time)
+        db.session.add(post)
+        db.session.commit()
+
+        return redirect(url_for('render_total_filter', userID=userID_receive))
+    else:
+        # Redirect the user to the login page if not authenticated
+        return redirect(url_for('login'))
 
 
 @app.route("/delete_post/<int:id>")
@@ -293,11 +305,11 @@ def signup_create():
         hashed_password = generate_password_hash(
             password_receive, method='pbkdf2:sha256')
         newUsers = Users(loginID=loginID_receive,
-                            password=hashed_password,
-                            name=name_receive,
-                            nickname=nickname_receive,
-                            email=email_receive,
-                            profile_img=profile_img_receive)
+                         password=hashed_password,
+                         name=name_receive,
+                         nickname=nickname_receive,
+                         email=email_receive,
+                         profile_img=profile_img_receive)
         db.session.add(newUsers)
         db.session.commit()
 
@@ -346,9 +358,15 @@ def login_login():
         notExist_message = True
         return render_template('login.html', notExist_message=notExist_message)
 
+@app.route("/logout")
+def logout():
+    session.pop('user_id', None)
+    session.pop('token', None)
+
+    return redirect(url_for('login'))
+
+
 # 토큰관련 (찬)
-
-
 @app.route("/protected", methods=["GET"])
 @token_required
 def protected(current_user):
@@ -370,12 +388,15 @@ def check_token():
     return render_template('check_token.html')
 
 # 노래 조회수 증가 함수
-@app.route("/increase_view_count", methods=['POST','GET'])
+
+
+@app.route("/increase_view_count", methods=['POST', 'GET'])
 def increase_view_count():
     board_post_id = request.form.get('board_post_id')
-    board=Posts.query.get(board_post_id)
+    board = Posts.query.get(board_post_id)
     if board:
-        view_count = ViewCount.query.filter_by(board_post_id=board_post_id).first()
+        view_count = ViewCount.query.filter_by(
+            board_post_id=board_post_id).first()
         if view_count:
             view_count.count += 1
         else:

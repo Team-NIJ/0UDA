@@ -20,6 +20,16 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
     }
+
+    /* 해당 스타일은 로고의 크기, 여백 등을 조절할 수 있습니다. */
+    .logo-img {
+      width: 150px;
+      /* 원하는 크기로 조절하세요 */
+      height: auto;
+      /* 가로 비율 유지 */
+      margin-bottom: 20px;
+      /* 원하는 여백 조절 */
+    }
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
@@ -28,37 +38,9 @@
   <div class="background-banner">
     <nav class="navbar border-bottom border-bottom-dark d-flex justify-content-space-between" data-bs-theme="dark">
       <div class="ms-3">
-        <img src="https://s3.ap-northeast-2.amazonaws.com/materials.spartacodingclub.kr/webjong/images/sparta-logo.svg"
-          alt="">
+        <img src="pic/copilot_webtoon.jfif" alt="Webtoon Logo" class="logo-img">
       </div>
-      <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ url_for('total') }}">Boards</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ url_for('webtoon') }}">Webtoon</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ url_for('signup') }}">Sign
-                  up</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ url_for('login') }}">Log in</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+      {% include '/forms/nav_bar.html' %}
     </nav>
 
     <!-- #좌측 상단에 카드형태로 webtoon.thumbnailUrl을 생성 -->

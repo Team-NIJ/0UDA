@@ -8,13 +8,16 @@
     <style>
         @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css");
         @import url('https://fonts.googleapis.com/css2?family=Cute+Font&display=swap');
+
         #eye-container {
             display: flex;
             justify-content: space-between;
         }
-        #eye{
+
+        #eye {
             display: flex;
         }
+
         .text-center {
             font-family: 'Cute Font', sans-serif;
             font-size: 50px;
@@ -183,67 +186,13 @@
 
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">최애 음악</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ url_for('total_create')}}" method="GET">
-
-                            <div class="mb-3">
-                                <label for="typeSelect" class="form-label">Type</label>
-                                <select class="form-control" id="typeSelect" name="type">
-                                    <option value="all">All</option>
-                                    <option value="music">Music</option>
-                                    <option value="movie">Movie</option>
-                                    <option value="instagram">Instagram</option>
-                                </select>
-                            </div>
-
-
-
-
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">유저</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1"
-                                    aria-describedby="emailHelp" name="userID">
-                                <div id="emailHelp" class="form-text">사용자(추천인)의 이름을 넣어주세요.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">노래 제목</label>
-                                <input type="text" class="form-control" id="exampleInputPassword1" name="title">
-                                <div id="emailHelp" class="form-text">좋아하는 노래 제목을 넣어주세요.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">앨범 커버URL</label>
-                                <input type="text" class="form-control" id="exampleInputPassword1" name="image_url">
-                            </div>
-                            <div class="mb-3">
-                                <label for="contentTextArea" class="form-label">content</label>
-                                <textarea type="text" class="form-control" id="contentTextArea" rows="4"
-                                    name="content"></textarea>
-                            </div>
-
-
-                            <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">urlurlurlurlulrurl 추천하는
-                                    url</label>
-                                <input type="text" class="form-control" id="exampleInputPassword1" name="url">
-                            </div>
-                            <button type="submit" class="btn custom-button">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% include 'upload_modal.html' %}
 
 
         <!-- card main case 2-->
         {% for post in data %}
-        <div class="card mb-3" style="cursor: pointer;" onclick="location.href='{{post.url}}'; increaseViewCount('{{post.postID}}');">
+        <div class="card mb-3" style="cursor: pointer;"
+            onclick="location.href='{{post.url}}'; increaseViewCount('{{post.postID}}');">
             <div class="row g-0">
                 <div class="col-md-6">
                     <img src="{{post.image_url}}" class="img-fluid rounded-start" alt="...">
@@ -260,7 +209,7 @@
                             </div>
 
                             <small class="card-text">Written by {{post.userID}}</small>
-                            
+
                             <div id="eye-container">
                                 <p class="card-text">
                                     <small class="text-muted">
@@ -271,20 +220,24 @@
                                         {% endif %}
                                     </small>
                                 </p>
-                                <div id="eye" >
+                                <div id="eye">
                                     <div class="icon-container">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="24" height="24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            width="24" height="24" stroke-width="1.5" stroke="currentColor"
+                                            class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                         </svg>
                                     </div>
-                                    
+
                                     <p class="eye-card-text">{{ post.view_count_relation.count }}</p>
                                 </div>
                             </div>
-                            
-                            
-                        
+
+
+
 
                         </div>
 
@@ -325,12 +278,12 @@
                 type: 'POST',
                 url: '/increase_view_count',
                 data: { board_post_id: postId },
-                success: function(response) {
+                success: function (response) {
                     console.log('View count increased successfully:', response);
                     // 응답이 성공적으로 왔을 때, 페이지 리로드
                     location.reload();
                 },
-                error: function(error) {
+                error: function (error) {
                     console.error('Error increasing view count:', error);
                 }
             });
