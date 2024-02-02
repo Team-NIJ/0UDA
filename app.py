@@ -345,21 +345,20 @@ def edit_post(postID):
     post = db.session.get(Posts, postID)
     if not post:
         return jsonify({'error': 'Post not found'}), 404
-
     data = request.json
     title = data.get('title')
     content = data.get('content')
     type = data.get('type')
+    url = data.get('url')
     image_url = data.get('image_url')
-
     if type is None:
         return jsonify({'error': '`type` is a required field'}), 400
-
     post.title = title
     post.content = content
     post.type = type
+    url = data.get('url')
+    post.url = url
     post.image_url = image_url
-
     try:
         db.session.commit()
         return jsonify({'success': 'Post updated successfully'}), 200
