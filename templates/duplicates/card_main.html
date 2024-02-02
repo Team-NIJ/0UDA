@@ -1,34 +1,48 @@
-<div class="card mb-3" id="post-{{ post.postID }}" style="cursor: pointer;" onclick="location.href='{{post.url}}'">
-</div>
-<div class="row g-0">
-    <div class="col-md-6">
-        <img src="{{post.image_url}}" class="img-fluid rounded-start" alt="...">
-    </div>
-    <div class="col-md-6">
-        <div class="card-body">
-            <h5 class="card-title">{{post.title}}</h5>
-            <pre class="card-text">{{post.content}}</pre>
+<div class="card mb-3" id="post-{{ post.postID }}" style="cursor: pointer;">
+    <div class="row g-0">
+        <div class="col-md-6">
+            <a href="{{ post.url }}" onclick="increaseViewCount('{{ post.url }}','{{post.postID}}');">
+                <img src="{{post.image_url}}" class="img-fluid rounded-start" alt="...">
+            </a>
+        </div>
+        <div class="col-md-6">
+            <div class="card-body">
+                <h5 class="card-title">{{post.title}}</h5>
+                <pre class="card-text">{{post.content}}</pre>
 
-            <div class="mt-auto">
-                <div class="text-end">
-                </div>
-                <small class="card-text">Written by {{post.userID}}</small>
-                <p class="card-text">
-                    <small class="text-muted">
-                        {% if post.date%}
-                        Posted on {{ post.date.strftime('%Y-%m-%d %H:%M') }}
-                        {% else %}
-                        Date not available
+                <div class="mt-auto">
+                    <div class="text-end">
+                    </div>
+                    <small class="card-text">Written by {{post.userID}}</small>
+                    <div id="eye-container">
+                        <p class="card-text">
+                            <small class="text-muted">
+                                {% if post.date%}
+                                Posted on {{ post.date.strftime('%Y-%m-%d %H:%M') }}
+                                {% else %}
+                                Date not available
+                                {% endif %}
+                            </small>
+                        </p>
+                        <div id="eye" >
+                            <div class="icon-container">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="24" height="24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                </svg>
+                            </div>
+                            
+                            <p class="eye-card-text">{{ post.view_count_relation.count }}</p>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 d-sm-flex justify-content-end" onclick="event.stopPropagation()">
+                        {% if current_user_id == post.userID %}
+                        <button type="button" class="btn custom-button edit-btn" data-bs-toggle="modal"
+                            data-bs-target="#editModal" data-post-id="{{ post.postID }}">수정</button>
+                        <button type="button" class="btn custom-button delete-btn" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal" data-post-id="{{ post.postID }}">삭제</button>
                         {% endif %}
-                    </small>
-                </p>
-                <div class="d-grid gap-2 d-sm-flex justify-content-end" onclick="event.stopPropagation()">
-                    {% if current_user_id == post.userID %}
-                    <button type="button" class="btn custom-button edit-btn" data-bs-toggle="modal"
-                        data-bs-target="#editModal" data-post-id="{{ post.postID }}">수정</button>
-                    <button type="button" class="btn custom-button delete-btn" data-bs-toggle="modal"
-                        data-bs-target="#deleteModal" data-post-id="{{ post.postID }}">삭제</button>
-                    {% endif %}
+                    </div>
                 </div>
             </div>
         </div>

@@ -263,10 +263,23 @@ def total_create():
 #     return redirect(url_for('total'))
 @app.route("/delete_post/<int:postID>", methods=['POST'])
 def delete_post(postID):
-    post_to_delete = Posts.query.get_or_404(postID)
+    # post_to_delete = Posts.query.get_or_404(postID)
+    # db.session.delete(post_to_delete)
+    # db.session.commit()
+    print("Before deletion")
+    post_to_delete = Posts.query.get(id)
+    
+    # Cascade delete to associated view_count
+    if post_to_delete:
+        view_count_to_delete = ViewCount.query.filter_by(board_post_id=id).first()
+        if view_count_to_delete:
+            db.session.delete(view_count_to_delete)
+
     db.session.delete(post_to_delete)
     db.session.commit()
-    return jsonify({'success': 'Post deleted successfully'}), 200
+    print("After deletion")
+    return redirect(url_for('total'))
+    # return jsonify({'success': 'Post deleted successfully'}), 200
 
 
 @app.route("/get-post-info/<int:postID>")
@@ -432,7 +445,7 @@ def check_token():
     return render_template('check_token.html')
 
 # 노래 조회수 증가 함수
-@app.route("/increase_view_count", methods=['POST','GET'])
+@app.route("/increase_view_count", methods=['POST'])
 def increase_view_count():
     board_post_id = request.form.get('board_post_id')
     board=Posts.query.get(board_post_id)
