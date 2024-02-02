@@ -15,19 +15,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
 
 db = SQLAlchemy(app)
 
-
 class ViewCount(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    board_post_id = db.Column(db.Integer, db.ForeignKey(
-        'posts.postID'), nullable=False, unique=True)
+    board_post_id = db.Column(db.Integer, db.ForeignKey('posts.postID'), nullable=False, unique=True)
     count = db.Column(db.Integer, default=0)
 
-    board = db.relationship('Posts', backref=db.backref(
-        'view_count_relation', uselist=False))
-
+    board = db.relationship('Posts', backref=db.backref('view_count_relation', uselist=False))
+    
     def __repr__(self):
         return f'노래 ID {self.board_post_id}의 조회수: {self.count}'
-
 
 class Users(db.Model):
     userID = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -198,10 +194,21 @@ def webtoon_reload():
     return redirect(url_for('webtoon'))
 
 
-@app.route("/total/")
+# @app.route("/total/")
+# def total():
+#     post_list = Posts.query.all()
+#     return render_template('total.html', data=post_list)
+@app.route("/total/", methods=['GET', 'POST'])
 def total():
-    post_list = Posts.query.all()
-    return render_template('total.html', data=post_list)
+    if request.method == 'POST':
+        # 여기에 POST 요청 처리 로직을 구현합니다.
+        return redirect(url_for('total'))
+    else:
+        post_list = Posts.query.all()
+        user_id_from_session = session.get('user_id')# 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
+        login_id = Users.query.filter_by(userID=userID).first()
+        return render_template('total.html', data=post_list, current_user_id=user_id_from_session)
+        # return render_template('total.html', data=post_list)
 
 
 @app.route("/total/<userID>")
@@ -212,20 +219,41 @@ def render_total_filter(userID):
 
 @app.route("/music/")
 def music():
-    music_list = Posts.query.filter_by(type="music").all()
-    return render_template('music.html', data=music_list)
+    if request.method == 'POST':
+        # 여기에 POST 요청 처리 로직을 구현합니다.
+        return redirect(url_for('music'))
+    else:
+        music_list = Posts.query.filter_by(type="music").all()
+        user_id_from_session = session.get('user_id')# 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
+        return render_template('music.html', data=music_list, current_user_id=user_id_from_session)
+    # music_list = Posts.query.filter_by(type="music").all()
+    # return render_template('music.html', data=music_list)
 
 
 @app.route("/movie/")
 def movie():
-    movie_list = Posts.query.filter_by(type="movie").all()
-    return render_template('movie.html', data=movie_list)
+    if request.method == 'POST':
+        # 여기에 POST 요청 처리 로직을 구현합니다.
+        return redirect(url_for('movie'))
+    else:
+        movie_list = Posts.query.filter_by(type="movie").all()
+        user_id_from_session = session.get('user_id')# 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
+        return render_template('movie.html', data=movie_list, current_user_id=user_id_from_session)
+    # movie_list = Posts.query.filter_by(type="movie").all()
+    # return render_template('movie.html', data=movie_list)
 
 
 @app.route("/instagram/")
 def instagram():
-    instagram_list = Posts.query.filter_by(type="instagram").all()
-    return render_template('instagram.html', data=instagram_list)
+    if request.method == 'POST':
+        # 여기에 POST 요청 처리 로직을 구현합니다.
+        return redirect(url_for('instagram'))
+    else:
+        instagram_list = Posts.query.filter_by(type="instagram").all()
+        user_id_from_session = session.get('user_id')# 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
+        return render_template('total.html', data=instagram_list, current_user_id=user_id_from_session)
+    # instagram_list = Posts.query.filter_by(type="instagram").all()
+    # return render_template('instagram.html', data=instagram_list)
 
 
 @app.route("/total/create/")
@@ -255,14 +283,77 @@ def total_create():
         # Redirect the user to the login page if not authenticated
         return redirect(url_for('login'))
 
+# @app.route("/delete_post/<int:id>")
+# def delete_post(id):
+#     post_to_delete = Posts.query.get_or_404(id)
+#     db.session.delete(post_to_delete)
+#     db.session.commit()
+#     return redirect(url_for('total'))
+@app.route("/delete_post/<int:postID>", methods=['POST'])
+def delete_post(postID):
+    # post_to_delete = Posts.query.get_or_404(postID)
+    # db.session.delete(post_to_delete)
+    # db.session.commit()
+    print("Before deletion")
+    post_to_delete = Posts.query.get(postID)
+    
+    # Cascade delete to associated view_count
+    if post_to_delete:
+        view_count_to_delete = ViewCount.query.filter_by(board_post_id=postID).first()
+        if view_count_to_delete:
+            db.session.delete(view_count_to_delete)
 
-@app.route("/delete_post/<int:id>")
-def delete_post(id):
-    post_to_delete = Posts.query.get_or_404(id)
     db.session.delete(post_to_delete)
     db.session.commit()
+    print("After deletion")
     return redirect(url_for('total'))
+    # return jsonify({'success': 'Post deleted successfully'}), 200
 
+
+@app.route("/get-post-info/<int:postID>")
+def get_post_info(postID):
+    post = db.session.get(Posts, postID)  # 변경된 부분
+    if post:
+        return jsonify({
+            "postID": post.postID,
+            "userID": post.userID,
+            "title": post.title,
+            "content": post.content,
+            "url": post.url,
+            "type": post.type,
+            "image_url": post.image_url,
+            "date": post.date.strftime("%Y-%m-%d %H:%M:%S")
+        })
+    else:
+        return "Post not found", 404
+
+@app.route('/edit-post/<int:postID>', methods=['POST'])
+def edit_post(postID):
+    post = db.session.get(Posts, postID)
+    if not post:
+        return jsonify({'error': 'Post not found'}), 404
+
+    data = request.json
+    title = data.get('title')
+    content = data.get('content')
+    type = data.get('type')
+    image_url = data.get('image_url')
+
+    if type is None:
+        return jsonify({'error': '`type` is a required field'}), 400
+
+    post.title = title
+    post.content = content
+    post.type = type
+    post.image_url = image_url
+
+    try:
+        db.session.commit()
+        return jsonify({'success': 'Post updated successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500    
+    
 
 @app.route('/webtoon/<titleId>')
 def webtoon_specific(titleId):
@@ -305,11 +396,11 @@ def signup_create():
         hashed_password = generate_password_hash(
             password_receive, method='pbkdf2:sha256')
         newUsers = Users(loginID=loginID_receive,
-                         password=hashed_password,
-                         name=name_receive,
-                         nickname=nickname_receive,
-                         email=email_receive,
-                         profile_img=profile_img_receive)
+                        password=hashed_password,
+                        name=name_receive,
+                        nickname=nickname_receive,
+                        email=email_receive,
+                        profile_img=profile_img_receive)
         db.session.add(newUsers)
         db.session.commit()
 
@@ -388,15 +479,12 @@ def check_token():
     return render_template('check_token.html')
 
 # 노래 조회수 증가 함수
-
-
-@app.route("/increase_view_count", methods=['POST', 'GET'])
+@app.route("/increase_view_count", methods=['POST'])
 def increase_view_count():
     board_post_id = request.form.get('board_post_id')
-    board = Posts.query.get(board_post_id)
+    board=Posts.query.get(board_post_id)
     if board:
-        view_count = ViewCount.query.filter_by(
-            board_post_id=board_post_id).first()
+        view_count = ViewCount.query.filter_by(board_post_id=board_post_id).first()
         if view_count:
             view_count.count += 1
         else:

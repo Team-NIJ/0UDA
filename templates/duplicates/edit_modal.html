@@ -1,0 +1,72 @@
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">게시물 수정</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" method="POST">
+                    <input type="hidden" name="postID" id="editPostID">
+                    <div class="mb-3">
+                        <label for="editTypeSelect" class="form-label">타입</label>
+                        <select class="form-control" id="editTypeSelect" name="type">
+                            <option value="music">음악</option>
+                            <option value="movie">영화</option>
+                            <option value="instagram">인스타그램</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <input type="hidden" class="form-control" id="editUserID" name="userID">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTitle" class="form-label">제목</label>
+                        <input type="text" class="form-control" id="editTitle" name="title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editImageUrl" class="form-label">이미지 URL</label>
+                        <input type="text" class="form-control" id="editImageUrl" name="image_url">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editContent" class="form-label">내용</label>
+                        <textarea class="form-control" id="editContent" rows="3" name="content"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUrl" class="form-label">URL</label>
+                        <input type="text" class="form-control" id="editUrl" name="url">
+                    </div>
+                    <button type="submit" class="btn custom-button">수정하기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<!-- <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Post Edit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editPostId" name="postID">
+                    <div class="mb-3">
+                        <label for="editTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="editTitle" name="title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editContent" class="form-label">Content</label>
+                        <textarea class="form-control" id="editContent" name="content" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" form="editForm">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div> -->

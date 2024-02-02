@@ -8,16 +8,25 @@
     <style>
         @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css");
         @import url('https://fonts.googleapis.com/css2?family=Cute+Font&display=swap');
+<<<<<<< HEAD
 
+=======
+>>>>>>> 111/test_test1
         #eye-container {
             display: flex;
             justify-content: space-between;
         }
+<<<<<<< HEAD
 
         #eye {
             display: flex;
         }
 
+=======
+        #eye{
+            display: flex;
+        }
+>>>>>>> 111/test_test1
         .text-center {
             font-family: 'Cute Font', sans-serif;
             font-size: 50px;
@@ -186,68 +195,23 @@
 
 
         <!-- Modal -->
-        {% include 'upload_modal.html' %}
+        {% include 'forms/upload_modal.html' %}
 
+
+        <!-- Delete Modal -->
+        {% include 'duplicates/delete_modal.html' %}
+
+        <!-- Edit Modal-->
+        {% include 'duplicates/edit_modal.html' %}
 
         <!-- card main case 2-->
+        <p>Current User ID: {{ current_user_id }}</p>
         {% for post in data %}
-        <div class="card mb-3" style="cursor: pointer;"
-            onclick="location.href='{{post.url}}'; increaseViewCount('{{post.postID}}');">
-            <div class="row g-0">
-                <div class="col-md-6">
-                    <img src="{{post.image_url}}" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-6">
-                    <div class="card-body">
-                        <h5 class="card-title">{{post.title}}</h5>
-                        <pre class="card-text">{{post.content}}</pre>
-
-                        <div class="mt-auto">
-                            <div class="text-end">
-                                <a href="{{ url_for('delete_post', id=post.postID) }}"
-                                    class="btn custom-button me-3">삭제</a>
-                            </div>
-
-                            <small class="card-text">Written by {{post.userID}}</small>
-
-                            <div id="eye-container">
-                                <p class="card-text">
-                                    <small class="text-muted">
-                                        {% if post.date%}
-                                        Posted on {{ post.date.strftime('%Y-%m-%d %H:%M') }}
-                                        {% else %}
-                                        Date not available
-                                        {% endif %}
-                                    </small>
-                                </p>
-                                <div id="eye">
-                                    <div class="icon-container">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            width="24" height="24" stroke-width="1.5" stroke="currentColor"
-                                            class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                        </svg>
-                                    </div>
-
-                                    <p class="eye-card-text">{{ post.view_count_relation.count }}</p>
-                                </div>
-                            </div>
-
-
-
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- {% include 'duplicates/card_main.html' %} -->
+        {% with current_user_id=current_user_id %}
+        {% include 'duplicates/card_main.html' %}
+        {% endwith %}
         {% endfor %}
-
-
 
     </div>
     </div>
@@ -287,8 +251,24 @@
                     console.error('Error increasing view count:', error);
                 }
             });
-        }
-    </script>
+        }</script>
+
+    <script src="{{ url_for('static', filename='deleteModal.js') }}"></script>
+    <script src="{{ url_for('static', filename='editModal.js') }}"></script>
+    <script>
+        async function increaseViewCount(url, postID) {
+            await fetch('/increase_view_count', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `board_post_id=${postID}`,
+            });
+
+            // After the AJAX request is complete, navigate to the URL
+            window.location.href = url;
+        }</script>
+
 </body>
 
 </html>
