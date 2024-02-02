@@ -251,7 +251,7 @@ def instagram():
     else:
         instagram_list = Posts.query.filter_by(type="instagram").all()
         user_id_from_session = session.get('user_id')# 현재 로그인한 사용자의 ID를 세션에서 가져옵니다.
-        return render_template('total.html', data=instagram_list, current_user_id=user_id_from_session)
+        return render_template('instagram.html', data=instagram_list, current_user_id=user_id_from_session)
     # instagram_list = Posts.query.filter_by(type="instagram").all()
     # return render_template('instagram.html', data=instagram_list)
 

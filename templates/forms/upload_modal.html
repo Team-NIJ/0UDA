@@ -11,37 +11,29 @@
                     <div class="mb-3">
                         <label for="typeSelect" class="form-label">Type</label>
                         <select class="form-control" id="typeSelect" name="type">
-                            <option value="all">All</option>
+                            <!-- <option value="all">All</option> -->
+                            <option value="" disabled selected hidden></option>
                             <option value="music">Music</option>
                             <option value="movie">Movie</option>
                             <option value="instagram">Instagram</option>
                         </select>
                     </div>
-
-                    <!-- <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">유저</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                            name="userID">
-                        <div id="emailHelp" class="form-text">사용자(추천인)의 이름을 넣어주세요.</div>
-                    </div> -->
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">링크 제목</label>
+                        <label for="exampleInputPassword1" class="form-label">제목</label>
                         <input type="text" class="form-control" id="exampleInputPassword1" name="title">
-                        <div id="emailHelp" class="form-text">추천하시는 링크 제목을 넣어주세요.</div>
+                        <div id="emailHelp" class="form-text">공유하고자 하는 것의 이름을 적어주세요.</div>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">썸네일URL</label>
+                        <label for="exampleInputPassword1" class="form-label">첨부 사진 URL</label>
                         <input type="text" class="form-control" id="exampleInputPassword1" name="image_url">
                     </div>
                     <div class="mb-3">
-                        <label for="contentTextArea" class="form-label">content</label>
+                        <label for="contentTextArea" class="form-label">본문</label>
                         <textarea type="text" class="form-control" id="contentTextArea" rows="4"
                             name="content"></textarea>
                     </div>
-
-
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">링크 주소(url)</label>
+                        <label for="exampleInputPassword1" class="form-label">추천하는 게시글의 링크</label>
                         <input type="text" class="form-control" id="exampleInputPassword1" name="url">
                     </div>
                     <button type="submit" class="btn custom-button">Submit</button>
